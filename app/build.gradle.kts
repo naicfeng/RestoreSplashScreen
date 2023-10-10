@@ -36,17 +36,19 @@ android {
         includeInBundle = false
     }
 
-    val isKeyStoreAvailable = property.keystore.path.isNotBlank() &&
-            property.keystore.pass.isNotBlank() &&
-            property.key.alias.isNotBlank()&&
-            property.key.password.isNotBlank()
+    val keystorePath = System.getenv("KEYSTORE_PATH")
+    val keystorePwd = System.getenv("KEYSTORE_PASS")
+    val alias = System.getenv("KEY_ALIAS")
+    val pwd = System.getenv("KEY_PASSWORD")
+    val isKeyStoreAvailable = keystorePath != null && keystorePwd != null && alias != null && pwd != null
+
     if (isKeyStoreAvailable) {
         signingConfigs {
             create("release") {
-                storeFile = file(property.keystore.path)
-                storePassword = property.keystore.pass
-                keyAlias = property.key.alias
-                keyPassword = property.key.password
+                storeFile = file(keystorePath)
+                storePassword = keystorePwd
+                keyAlias = alias
+                keyPassword = pwd
                 enableV3Signing = true
             }
         }
